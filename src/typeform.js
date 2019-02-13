@@ -1,18 +1,18 @@
-import { clientConstructor } from './create-client'
-import forms from './forms'
-import images from './images'
-import teams from './teams'
-import themes from './themes'
-import workspaces from './workspaces'
-import responses from './responses'
-import webhooks from './webhooks'
+import { clientConstructor } from './create-client';
+import forms from './forms';
+import images from './images';
+import teams from './teams';
+import themes from './themes';
+import workspaces from './workspaces';
+import responses from './responses';
+import webhooks from './webhooks';
 
 export const createClient = (args = {}) => {
   if (args.token === undefined) {
-    throw new Error('Token is missing')
+    throw new Error('Token is missing');
   }
 
-  const http = clientConstructor(args)
+  const http = clientConstructor(args);
 
   return {
     forms: forms(http),
@@ -25,4 +25,4 @@ export const createClient = (args = {}) => {
   }
 }
 
-export default createClient
+export default createClient;

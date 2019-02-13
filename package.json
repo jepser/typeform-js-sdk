@@ -82,7 +82,9 @@
     "env": [
       "jest"
     ],
-    "globals": ["fetch"]
+    "globals": [
+      "fetch"
+    ]
   },
   "peerDependencies": {}
 }

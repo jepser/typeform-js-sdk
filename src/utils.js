@@ -1,13 +1,10 @@
-export const isMemberPropValid = members => {
-  if (members === undefined) {
-    return false
-  }
+export const buildUrlWithParams = (url, params = {}) => {
+  const queryParams = Object.keys(params)
+    .filter((k) => params[k] !== undefined && params[k] !== null)
+    .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`)
+    .join('&');
 
-  if (!(typeof members === 'string' || Array.isArray(members))) {
-    return false
-  }
-
-  return true
+  return queryParams ? `${url}?${queryParams}` : url;
 }
 
 export const createMemberPatchQuery = ({ members, operation }) => {
@@ -17,14 +14,32 @@ export const createMemberPatchQuery = ({ members, operation }) => {
     value: {
       email: member
     }
-  }))
+  }));
 }
 
-export const buildUrlWithParams = (url, params = {}) => {
-  const queryParams = Object.keys(params)
-    .filter((k) => params[k] !== undefined && params[k] !== null)
-    .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`)
-    .join('&')
+export const createOrUpdateWebhook = (http, { uid, tag, url, enable = false } = {}) => {
+  if (url === undefined) {
+    throw new Error(`Please provide an url for ${tag}`);
+  }
 
-  return queryParams ? `${url}?${queryParams}` : url
+  if (tag === undefined) {
+    throw new Error(`Please provide a tag name for the webhook`);
+  }
+
+  return http.request({
+    method: 'put',
+    url: `/forms/${uid}/webhooks/${tag}`,
+    data: {
+      url,
+      enable
+    }
+  });
+}
+
+export const isMemberPropValid = members => {
+  if (members === undefined || !(typeof members === 'string' || Array.isArray(members))) {
+    return false;
+  }
+
+  return true;
 }
