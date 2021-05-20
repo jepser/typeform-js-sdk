@@ -691,7 +691,7 @@ export namespace Typeform {
        * Contains the fields that belong in a question group. Only `payment` and `group` blocks are not allowed inside a question group.
        * Available for the `group` type.
        */
-      fields?: any[][]
+      fields?: any[]
       /**
        * true to allow respondents to select more than one answer choice. false to allow respondents to select only one answer choice.
        * Available for `multiple_choice` and `picture_choice` types.
