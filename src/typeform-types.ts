@@ -176,7 +176,7 @@ export namespace Typeform {
       /**
        * Type of value the condition object refers to.
        */
-      type?: 'field' | 'hidden' | 'variable' | 'constant' | 'end'
+      type?: 'field' | 'hidden' | 'variable' | 'constant' | 'end'| 'choice'
       /**
        * Value to check for in the "type" field to evaluate with the operator.
        */
