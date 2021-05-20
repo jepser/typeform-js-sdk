@@ -16,7 +16,7 @@ export namespace Typeform {
      * Conditions for executing the Logic Jump. Conditions answer the question, "Under what circumstances?"
      * The condition object is the IF statement in your Logic Jump.
      */
-    condition?: Condition
+    condition?: Condition | AndOrOperator
   }
   /**
    * Properties that further specify how the Logic Jump will behave.
@@ -182,6 +182,19 @@ export namespace Typeform {
        */
       value?: any
     }[]
+  }
+  /**
+   * Conditions for a logic jump can be combined using the `and` and `or` operators
+   */
+  export interface AndOrOperator {
+  /**
+   * Operator for the condition.
+   */
+    op?: 'and' | 'or'
+  /**
+   * Object that defines the field type and value to evaluate with the operator.
+   */
+    vars: Array<AndOrOperator | Condition>
   }
   /**
    * Generic document.
