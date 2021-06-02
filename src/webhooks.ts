@@ -35,6 +35,18 @@ export class Webhooks {
       url: `/forms/${uid}/webhooks`
     })
   }
+  
+  public toggle (args: { uid: string, tag: string, enabled: boolean }): Promise<Typeform.API.Webhooks.List> {
+    const { uid, tag, enabled } = args
+
+    return this._http.request({
+      method: 'put',
+      url: `/forms/${uid}/webhooks/${tag}`,
+      data: {
+        enabled
+      }
+    })
+  }
 
   update (
     args: { uid: string, tag: string, url: string, enabled?: boolean, secret?: string, verifySSL?: boolean }

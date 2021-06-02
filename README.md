@@ -281,6 +281,13 @@ Each one of them encapsulates the operations related to it (like listing, updati
 - `secret`: If specified, will be used to sign the webhook payload with HMAC SHA256, so that you can verify that it came from Typeform.
 - `verifySSL`: `true` if you want Typeform to verify SSL certificates when delivering payloads.
 
+#### `webhooks.toggle({ uid, tag, enabled })`
+
+- Turn on or off a webhook.
+- `uid`: Unique ID for the form.
+- `tag`: tag of the webhook created.
+- `enabled`: `true` or `false`.
+
 ## Examples
 
 ### Update specific typeform property, as [referenced here](https://developer.typeform.com/create/reference/update-form-patch/)
