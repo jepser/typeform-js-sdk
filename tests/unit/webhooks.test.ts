@@ -61,3 +61,19 @@ test('Delete a webhook has the correct path and method', async () => {
   expect(axios.history.delete[0].url).toBe(`${API_BASE_URL}/forms/2/webhooks/test`)
   expect(axios.history.delete[0].method).toBe('delete')
 })
+
+test('toggle(false) Disable a webhook', async () => {
+  await webhooksRequest.toggle({ uid: '2', tag: 'test', enabled: false })
+  const bodyParsed = JSON.parse(axios.history.put[0].data)
+  expect(axios.history.put[0].method).toBe('put')
+  expect(axios.history.put[0].url).toBe(`${API_BASE_URL}/forms/2/webhooks/test`)
+  expect(bodyParsed.enabled).toBe(false)
+})
+
+test('toggle(true) Enable a webhook', async () => {
+  await webhooksRequest.toggle({ uid: '2', tag: 'test', enabled: true })
+  const bodyParsed = JSON.parse(axios.history.put[0].data)
+  expect(axios.history.put[0].method).toBe('put')
+  expect(axios.history.put[0].url).toBe(`${API_BASE_URL}/forms/2/webhooks/test`)
+  expect(bodyParsed.enabled).toBe(true)
+})
