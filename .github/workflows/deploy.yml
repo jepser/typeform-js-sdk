@@ -1,0 +1,62 @@
+name: Deploy
+
+on:
+  push:
+    branches: [master]
+
+  pull_request:
+    branches:
+      - master
+
+
+env:
+    GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+    DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+    JENKINS_PASSWORD: ${{ secrets.JENKINS_PASSWORD }}
+    JENKINS_USERNAME: ${{ secrets.JENKINS_USERNAME }}
+    JENKINS_OKTA_USERNAME: ${{ secrets.JENKINS_OKTA_USERNAME }}
+    JENKINS_USER_TOKEN: ${{ secrets.JENKINS_USER_TOKEN }}
+
+jobs:
+    init:
+        runs-on: [self-hosted, fear]
+        outputs:
+            skip: ${{ steps.ci-skip-step.outputs.ci-skip }}
+            skip-not: ${{ steps.ci-skip-step.outputs.ci-skip-not }}
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  fetch-depth: 0
+            - uses: mstachniuk/ci-skip@master
+              id: ci-skip-step
+              with:
+                  commit-filter: '[skip ci]'
+    deploy_aws:
+        name: Deploy
+        runs-on: [self-hosted, fear]
+        needs: init
+        if: ${{ needs.init.outputs.skip == 'false' }}
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  fetch-depth: 0
+                  # Use custom token from repo secrets to allow semantic release to push commit:
+                  # https://github.com/semantic-release/semantic-release/blob/master/docs/recipes/github-actions.md#pushing-packagejson-changes-to-a-master-branch
+                  persist-credentials: false
+                  token: ${{ secrets.GH_TOKEN }}
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: '14'
+            - run: npm config set '//npm.pkg.github.com/:_authToken' $GH_TOKEN
+            - run: npm config set @typeform:registry https://npm.pkg.github.com/
+            - run: yarn 
+            - run: yarn server & 
+            - run: yarn lint 
+            - run: yarn test 
+            - run: yarn test:integration 
+
+            - name: Semantic Release 
+              if: contains(github.ref, 'refs/heads/master')
+              run: yarn run semantic-release 
